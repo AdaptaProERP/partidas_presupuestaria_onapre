@@ -1,6 +1,7 @@
 // Programa   : ONAPREIMPCSV
 // Fecha/Hora : 19/11/2019 21:39:22
-// Propósito  : Importar Plan de Cuentas
+// Propósito  : Importar Partidas Presupuestarias ONAPRE, desde excel guardar como CSV en carpeta c:\dpsgev60\ejemplo
+//              luego, desde ejecutar comando: EJECUTAR("ONAPREIMPCSV")
 // Creado Por : Juan Navas
 // Llamado por:
 // Aplicación :
