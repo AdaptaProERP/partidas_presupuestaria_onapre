@@ -11,7 +11,7 @@
 
 PROCE MAIN(cFile,lReset)
   LOCAL aData,I
-  LOCAL oTable
+  LOCAL oTable,cCodigo,cCodNiv,lCtaDet
 
   DEFAULT cFile :="EJEMPLO\ONAPRE.CSV",;
           lReset:=.T.
@@ -35,18 +35,46 @@ PROCE MAIN(cFile,lReset)
   ADEPURA(aData,{|a,n| !ISDIGIT(LEFT(a[1],1))})
 
   oTable:=OpenTable("SELECT * FROM DPCTAPRESUP",.F.)
+  //oTable:=INSERTINTO("DPCTAPRESUP")
   oTable:lAuditar:=.F.
   oTable:SetForeignkeyOff()
 
   FOR I=1 TO LEN(aData)
 
+    cCodigo:=ALLTRIM(aData[I,1]) // 4-01-01-01-00-001
+    lCtaDet:=LEN(cCodigo)=16
+    cCodigo:=LEFT(cCodigo,1  )+"-"+;
+             SUBS(cCodigo,2,2)+"-"+;
+             SUBS(cCodigo,4,2)+"-"+;
+             SUBS(cCodigo,6,2)+"-"+;
+             SUBS(cCodigo,8,2)+"-"+;
+             RIGHT(cCodigo,3)
+
+   
+    cCodNiv:=ALLTRIM(cCodigo) // 4-01-01-01-00-001
+    cCodigo:=STRTRAN(cCodigo,"-00-00-00-00-000","")
+    cCodigo:=STRTRAN(cCodigo,"-00-00-00-000"   ,"")
+    cCodigo:=STRTRAN(cCodigo,"-00-00-000"      ,"")
+//  cCodigo:=STRTRAN(cCodigo,"-00-000"         ,"")
+    cCodigo:=STRTRAN(cCodigo,"-000"            ,"")
+
+    cCodigo:=ALLTRIM(cCodigo)
+    IF RIGHT(cCodigo,3)="-00"
+       cCodigo:=LEFT(cCodigo,LEN(cCodigo)-3)
+    ENDIF
+
+    cCodNiv:=cCodigo
     oTable:AppendBlank()
-    oTable:Replace("CPP_CODIGO",aData[I,1])
+    oTable:Replace("CPP_CODIGO",cCodigo)  // aData[I,1])
     oTable:Replace("CPP_CODCTA",aData[I,6])
     oTable:Replace("CPP_DESCRI",aData[I,2])
     oTable:Replace("CPP_NIVEL" ,aData[I,3])
     oTable:Replace("CPP_TIPO"  ,aData[I,4])
+    oTable:Replace("CPP_CODNIV",cCodNiv )
+    oTable:Replace("CPP_CTAMOD",oDp:cCtaMod)
     oTable:Replace("CPP_ACTIVO",.T.       )
+    oTable:Replace("CPP_CTADET",lCtaDet   )
+
     oTable:Commit()
 
   NEXT I

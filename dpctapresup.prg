@@ -15,7 +15,12 @@ FUNCTION DPCTAPRESUP(nOption,cCodigo)
   LOCAL cTitle,cSql,cFile,cExcluye:=""
   LOCAL nClrText
   LOCAL cTitle:="Cuentas de Presupuesto"
-  LOCAL aItems1:=GETOPTIONS("DPCTAPRESUP","CPP_TIPO")
+  LOCAL aItems1:=GETOPTIONS("DPCTAPRESUP","CPP_CLASIF")
+
+  IF Empty(aItems1)
+     aItems1:={}
+     AADD(aItems1,"Indefinida")
+  ENDIF
 
 
   cExcluye:="CPP_CODIGO,;
@@ -154,8 +159,8 @@ FUNCTION DPCTAPRESUP(nOption,cCodigo)
 /*
 // Partida Presupuestaria
 */
-  @ 5.4,15.0 COMBOBOX oCTAPRESUP:oCPP_TIPO VAR oCTAPRESUP:CPP_TIPO ITEMS aItems1;
-                      WHEN (AccessField("DPCTAPRESUP","CPP_TIPO",oCTAPRESUP:nOption);
+  @ 5.4,15.0 COMBOBOX oCTAPRESUP:oCPP_CLASIFI VAR oCTAPRESUP:CPP_CLASIFI ITEMS aItems1;
+                      WHEN (AccessField("DPCTAPRESUP","CPP_CLASIFI",oCTAPRESUP:nOption);
                     .AND. oCTAPRESUP:nOption!=0);
                       FONT oFontG;
 
@@ -163,8 +168,8 @@ FUNCTION DPCTAPRESUP(nOption,cCodigo)
    ComboIni(oCTAPRESUP:oCTAPRESUP_TIPREP)
 
 
-    oCTAPRESUP:oCPP_TIPO:cMsg    :="Partida Presupuestaria"
-    oCTAPRESUP:oCPP_TIPO:cToolTip:="Partida Presupuestaria"
+    oCTAPRESUP:oCPP_CLASIFI:cMsg    :="Partida Presupuestaria"
+    oCTAPRESUP:oCPP_CLASIFI:cToolTip:="Partida Presupuestaria"
 
   @ oCTAPRESUP:oCTAPRESUP_TIPREP:nTop-08,oCTAPRESUP:oCTAPRESUP_TIPREP:nLeft SAY "Partida Presupuestaria" PIXEL;
                             SIZE NIL,7 FONT oFont COLOR nClrText,oDp:nGris
