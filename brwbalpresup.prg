@@ -343,7 +343,7 @@ FUNCTION ViewDatBar()
           TOP PROMPT "Imprimir"; 
           ACTION  oBrBalPresup:PRINTBALCOM()
 
-   oBtn:cToolTip:="Imprimir Balance de Comprobación"
+   oBtn:cToolTip:="Imprimir Estado de Situación Presupuestaria"
 
 
    DEFINE BUTTON oBtn;
@@ -1041,10 +1041,10 @@ FUNCTION VERBROWSE()
 RETURN .T.
 
 /*
-// Imprimir Balance de Comprobación
+// Imprimir Estado de situación Presupuestaria
 */
 FUNCTION PRINTBALCOM()
-  LOCAL oRep:=REPORTE("BALANCECOM")
+  LOCAL oRep:=REPORTE("BALANCEPRESUP")
 
   oRep:SetCriterio(1,oBrBalPresup:dDesde)
   oRep:SetCriterio(2,oBrBalPresup:dHasta)

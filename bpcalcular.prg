@@ -1,6 +1,6 @@
 // Programa   : BPCALCULAR
 // Fecha/Hora : 27/02/2006 23:40:36
-// Propósito  : Calcular Balance General
+// Propósito  : Calcular Estado Situacional Presupuesto según Partidas
 // Creado Por : Juan Navas
 // Llamado por: REPORTE PPCPRESUPUESTARIO
 // Aplicación : Presupuesto Administración Pública
@@ -342,7 +342,7 @@ FUNCTION HacerBal()
    // Todas las Cuentas ppales deben poseer 1, Digito pata Todos
   
    DpMsgClose()
-   DpMsgRun("Procesando","Creando Balance",NIL,oCuentas:RecCount(),NIL,.T.)
+   DpMsgRun("Procesando","Creando Presupuesto",NIL,oCuentas:RecCount(),NIL,.T.)
    DpMsgSetTotal(oCuentas:RecCount(),"Procesando","cText")
 
    WHILE !oCuentas:Eof()
