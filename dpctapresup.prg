@@ -52,7 +52,7 @@ FUNCTION DPCTAPRESUP(nOption,cCodigo)
 
  // oTable:Browse()
 
-  oCTABANCO:BCO_CUENTA:=EJECUTAR("DPGETCTAMOD","DPCTAPRESUP_CTA",oCTAPRESUP:CPP_CODIGO,NIL,"CUENTA")
+  oCTAPRESUP:BCO_CUENTA:=EJECUTAR("DPGETCTAMOD","DPCTAPRESUP_CTA",oCTAPRESUP:CPP_CODIGO,NIL,"CUENTA")
 
   IF nOption=1 .AND. oTable:RecCount()=0 // Genera Cursor Vacio
      oTable:End()
@@ -159,8 +159,8 @@ FUNCTION DPCTAPRESUP(nOption,cCodigo)
 /*
 // Partida Presupuestaria
 */
-  @ 5.4,15.0 COMBOBOX oCTAPRESUP:oCPP_CLASIFI VAR oCTAPRESUP:CPP_CLASIFI ITEMS aItems1;
-                      WHEN (AccessField("DPCTAPRESUP","CPP_CLASIFI",oCTAPRESUP:nOption);
+  @ 5.4,15.0 COMBOBOX oCTAPRESUP:oCPP_CLASIF VAR oCTAPRESUP:CPP_CLASIF ITEMS aItems1;
+                      WHEN (AccessField("DPCTAPRESUP","CPP_CLASIF",oCTAPRESUP:nOption);
                     .AND. oCTAPRESUP:nOption!=0);
                       FONT oFontG;
 
@@ -168,8 +168,8 @@ FUNCTION DPCTAPRESUP(nOption,cCodigo)
    ComboIni(oCTAPRESUP:oCTAPRESUP_TIPREP)
 
 
-    oCTAPRESUP:oCPP_CLASIFI:cMsg    :="Partida Presupuestaria"
-    oCTAPRESUP:oCPP_CLASIFI:cToolTip:="Partida Presupuestaria"
+    oCTAPRESUP:oCPP_CLASIF:cMsg    :="Partida Presupuestaria"
+    oCTAPRESUP:oCPP_CLASIF:cToolTip:="Partida Presupuestaria"
 
   @ oCTAPRESUP:oCTAPRESUP_TIPREP:nTop-08,oCTAPRESUP:oCTAPRESUP_TIPREP:nLeft SAY "Partida Presupuestaria" PIXEL;
                             SIZE NIL,7 FONT oFont COLOR nClrText,oDp:nGris
@@ -230,9 +230,9 @@ FUNCTION INICIO()
    LOCAL nLin:=0
 
    DEFINE CURSOR oCursor HAND
-   DEFINE BUTTONBAR oBar SIZE 52-15,60-15 OF oDlg 3D CURSOR oCursor
-   DEFINE FONT oFont  NAME "Arial"   SIZE 0, -14 BOLD
+   DEFINE BUTTONBAR oBar SIZE 52,60 OF oDlg 3D CURSOR oCursor
 
+   DEFINE FONT oFont  NAME "Tahoma"   SIZE 0, -11 BOLD
 
    IF oCTAPRESUP:nOption!=2
 
@@ -241,6 +241,7 @@ FUNCTION INICIO()
             NOBORDER;
             FONT oFont;
             FILENAME "BITMAPS\XSAVE.BMP",NIL,"BITMAPS\XSAVEG.BMP";
+            TOP PROMPT "Grabar";
             ACTION (oCTAPRESUP:Save())
 
      oBtn:cToolTip:="Guardar"
@@ -253,6 +254,7 @@ FUNCTION INICIO()
             NOBORDER;
             FONT oFont;
             FILENAME "BITMAPS\XCANCEL.BMP";
+            TOP PROMPT "Cerrar";
             ACTION (oCTAPRESUP:Cancel()) CANCEL
 
 
@@ -265,6 +267,7 @@ FUNCTION INICIO()
             NOBORDER;
             FONT oFont;
             FILENAME "BITMAPS\XSALIR.BMP";
+            TOP PROMPT "Cerrar";
             ACTION (oCTAPRESUP:Cancel()) CANCEL
 
    ENDIF
@@ -303,17 +306,14 @@ RETURN .T.
 FUNCTION PRESAVE()
   LOCAL lResp:=.T.
 
-// ? oCTAPRESUP:CPP_CODCTA
-// oCTAPRESUP:CPP_CODCTA:=EJECUTAR("DPGETCTAMOD","DPCTAPRESUP_CTA",oCTAPRESUP:oCPP_CODIGO,NIL,"CUENTA")
-//  EJECUTAR("SETCTAINTMOD","DPCTAPRESUP_CTA",oCTAPRESUP:CPP_CODIGO,"","CUENTA",oCAJA:CAJ_CODIGO,.T.)
-
   IF !ISSQLFIND("DPCTA","CTA_CODIGO"+GetWhere("=",oCTAPRESUP:CPP_CODCTA)) 
      EVAL(oCTAPRESUP:oCPP_CODCTA:bAction)
      RETURN .F.
   ENDIF
 
-  EJECUTAR("SETCTAINTMOD","DPCTAPRESUP_CTA",oCTAPRESUP:CPP_CODIGO,"","CUENTA",oCTAPRESUP:CPP_CODCTA,.T.)
-
+  IF Empty(oCTAPRESUP:CPP_CTAMOD)
+ //    oCTAPRESUP:CPP_CTAMOD
+   ENDIF
 
   lResp:=oCTAPRESUP:ValUnique(oCTAPRESUP:CPP_CODIGO)
 
@@ -327,6 +327,10 @@ RETURN lResp
 // Ejecución despues de Grabar
 */
 FUNCTION POSTSAVE()
+
+  EJECUTAR("SETCTAINTMOD","DPCTAPRESUP_CTA",oCTAPRESUP:CPP_CODIGO,"","CUENTA",oCTAPRESUP:CPP_CODCTA,.T.)
+
+
 RETURN .T.
 
 /*
